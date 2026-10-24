@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>معرض المنتجات</title>
+  <title>متجر الأقسام</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -50,6 +50,7 @@
       font-size: 1.3rem;
       font-weight: 800;
       color: var(--text-main);
+      cursor: pointer;
     }
 
     .rate-display {
@@ -62,17 +63,97 @@
       color: #065f46;
     }
 
-    .controls-bar {
+    .container {
       max-width: 900px;
-      margin: 16px auto;
+      margin: 20px auto;
       padding: 0 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
     }
 
-    .search-input, .select-input {
+    /* شريط العنوان والرجوع */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .back-btn {
+      background: #e5e7eb;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .back-btn:hover {
+      background: #d1d5db;
+    }
+
+    /* شبكة الأقسام (مطابقة لرسمتك المربعة) */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .category-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .category-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background-color: #f9fafb;
+    }
+
+    .category-name {
+      padding: 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* شريط البحث داخل المنتجات */
+    .controls-bar {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
       padding: 8px 12px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
@@ -81,15 +162,8 @@
       background: var(--card-bg);
     }
 
-    .search-input {
-      flex: 1;
-      min-width: 160px;
-    }
-
+    /* قائمة المنتجات الأفقية */
     .products-list {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -163,11 +237,6 @@
       color: var(--text-muted);
     }
 
-    .action-area {
-      display: flex;
-      align-items: center;
-    }
-
     .whatsapp-btn {
       display: inline-block;
       background-color: #25d366;
@@ -184,61 +253,143 @@
     .whatsapp-btn:hover {
       background-color: #128c7e;
     }
+
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
 
   <header>
     <div class="header-container">
-      <div class="logo-area">
-        <h1>معرض المنتجات</h1>
+      <div class="logo-area" onclick="showCategories()">
+        <h1>متجر الأقسام</h1>
       </div>
       <div class="rate-display" id="rateDisplay">1$ = 15,000 ل.س</div>
     </div>
   </header>
 
-  <div class="controls-bar">
-    <input type="text" id="searchInput" class="search-input" placeholder="بحث عن منتج..." oninput="filterProducts()">
-    <select id="categoryFilter" class="select-input" onchange="filterProducts()">
-      <option value="">جميع الأقسام</option>
-    </select>
-  </div>
+  <div class="container">
+    
+    <!-- قسم عرض الأقسام (الشكل الشبكي المربع) -->
+    <div id="categoriesView">
+      <div class="section-header">
+        <span class="section-title">أقسام المتجر</span>
+      </div>
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- يتم تعبئة الأقسام تلقائياً -->
+      </div>
+    </div>
 
-  <div class="products-list" id="productsGrid">
-    <!-- المنتجات تظهر هنا تلقائياً -->
+    <!-- قسم عرض المنتجات داخل القسم المختار -->
+    <div id="productsView" class="hidden">
+      <div class="section-header">
+        <span class="section-title" id="currentCategoryTitle">المنتجات</span>
+        <button class="back-btn" onclick="showCategories()">← رجوع للأقسام</button>
+      </div>
+      
+      <div class="controls-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="بحث داخل هذا القسم..." oninput="filterProducts()">
+      </div>
+
+      <div class="products-list" id="productsGrid">
+        <!-- يتم تعبئة المنتجات تلقائياً -->
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
-
-    // سعر الصرف الثابت (يمكنك تعديل الرقم هنا متى شئت يدوياً)
     const EXCHANGE_RATE = 15000;
 
-    // قائمة المنتجات المعروضة
+    // 10 أقسام رئيسية للمتجر (مع صور افتراضية، يمكنك تغيير روابط الصور وأسماء الأقسام)
+    let categories = [
+      { id: "games", name: "ألعاب وقودس", image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" },
+      { id: "apps", name: "تطبيقات مدفوعة", image: "https://via.placeholder.com/300?text=Apps" },
+      { id: "cards", name: "بطاقات شحن", image: "https://via.placeholder.com/300?text=Cards" },
+      { id: "social", name: "خدمات سوشيال ميديا", image: "https://via.placeholder.com/300?text=Social" },
+      { id: "accounts", name: "حسابات جاهزة", image: "https://via.placeholder.com/300?text=Accounts" },
+      { id: "software", name: "برامج كمبيوتر", image: "https://via.placeholder.com/300?text=Software" },
+      { id: "subscriptions", name: "اشتراكات نتفلكس ويوتيوب", image: "https://via.placeholder.com/300?text=Subscriptions" },
+      { id: "design", name: "تصاميم وجرافيك", image: "https://via.placeholder.com/300?text=Design" },
+      { id: "courses", name: "كورسات تعليمية", image: "https://via.placeholder.com/300?text=Courses" },
+      { id: "other", name: "منوعات أخرى", image: "https://via.placeholder.com/300?text=Other" }
+    ];
+
+    // قائمة المنتجات وتوزيعها على الأقسام عبر (categoryId)
     let products = [
       { 
         id: 1, 
+        categoryId: "games", 
         name: "حساب شاقة / لعبة", 
         priceUSD: 15, 
-        category: "ألعاب", 
         image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" 
+      },
+      { 
+        id: 2, 
+        categoryId: "apps", 
+        name: "تطبيق مدفوع النسخة الكاملة", 
+        priceUSD: 5, 
+        image: "https://via.placeholder.com/150?text=App" 
       }
     ];
+
+    let activeCategory = null;
 
     function formatNumber(num) {
       return new Intl.NumberFormat('ar-SY').format(Math.round(num));
     }
 
-    function renderProducts(list = products) {
+    // عرض الأقسام بشكل شبكة مربعة
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = '';
+      document.getElementById('rateDisplay').textContent = `1$ = ${formatNumber(EXCHANGE_RATE)} ل.س`;
+
+      categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.onclick = () => selectCategory(cat.id, cat.name);
+        card.innerHTML = `
+          <img src="${cat.image}" class="category-img" onerror="this.src='https://via.placeholder.com/150?text=قسم'">
+          <div class="category-name">${cat.name}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // الانتقال لمنتجات القسم المحدد
+    function selectCategory(catId, catName) {
+      activeCategory = catId;
+      document.getElementById('currentCategoryTitle').textContent = catName;
+      document.getElementById('categoriesView').classList.add('hidden');
+      document.getElementById('productsView').classList.remove('hidden');
+      document.getElementById('searchInput').value = '';
+      renderProducts();
+    }
+
+    // العودة لواجهة الأقسام
+    function showCategories() {
+      activeCategory = null;
+      document.getElementById('productsView').classList.add('hidden');
+      document.getElementById('categoriesView').classList.remove('hidden');
+    }
+
+    // عرض المنتجات الخاصة بالقسم الحالي
+    function renderProducts(searchQuery = '') {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
 
-      // تحديث عرض سعر الصرف في الهيدر تلقائياً بناءً على القيمة الثابتة
-      document.getElementById('rateDisplay').textContent = `1$ = ${formatNumber(EXCHANGE_RATE)} ل.س`;
+      let list = products.filter(p => p.categoryId === activeCategory);
+
+      if (searchQuery) {
+        list = list.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
 
       if (list.length === 0) {
-        grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
+        grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات في هذا القسم حالياً.</p>';
         return;
       }
 
@@ -261,49 +412,22 @@
                 <span class="price-usd">$${p.priceUSD}</span>
               </div>
             </div>
-            .action-area">
+            <div class="action-area">
               <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
             </div>
           </div>
         `;
         grid.appendChild(card);
       });
-
-      updateCategories();
     }
 
     function filterProducts() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const cat = document.getElementById('categoryFilter').value;
-
-      const filtered = products.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(search);
-        const matchesCat = cat === '' || p.category === cat;
-        return matchesSearch && matchesCat;
-      });
-
-      renderProducts(filtered);
+      const query = document.getElementById('searchInput').value;
+      renderProducts(query);
     }
 
-    function updateCategories() {
-      const select = document.getElementById('categoryFilter');
-      const currentCat = select.value;
-      const categories = [...new Set(products.map(p => p.category))];
-
-      select.innerHTML = '<option value="">جميع الأقسام</option>';
-      categories.forEach(c => {
-        if (c) {
-          const opt = document.createElement('option');
-          opt.value = c;
-          opt.textContent = c;
-          if (c === currentCat) opt.selected = true;
-          select.appendChild(opt);
-        }
-      });
-    }
-
-    // التشغيل الأولي
-    renderProducts();
+    // البدء بعرض الأقسام
+    renderCategories();
   </script>
 </body>
 </html>
