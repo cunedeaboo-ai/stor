@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معرض المنتجات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --bg-color: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-bottom: 40px;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 12px 16px;
+    }
+
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .rate-box {
+      background-color: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #065f46;
+    }
+
+    .rate-box input {
+      width: 90px;
+      padding: 4px 8px;
+      border: 1px solid #6ee7b7;
+      border-radius: 6px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .controls-bar {
+      max-width: 1100px;
+      margin: 16px auto;
+      padding: 0 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-input, .select-input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.9rem;
+      background: var(--card-bg);
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .admin-btn {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    /* شبكة المنتجات بطاقات أصفر وأصغر */
+    .products-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+      }
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* تصغير حجم الصورة بشكل ممتاز */
+    .img-container {
+      width: 100%;
+      height: 120px;
+      background-color: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-details {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-main);
+      line-height: 1.3;
+      height: 2.6em;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .price-box {
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .price-syp {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .price-usd {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .whatsapp-btn {
+      display: block;
+      width: 100%;
+      background-color: #25d366;
+      color: white;
+      text-align: center;
+      padding: 6px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #128c7e;
+    }
+
+    /* Modal / لوحة الإدارة */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-save { background: var(--primary); color: white; }
+    .btn-close { background: #e5e7eb; color: #374151; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="logo-area">
+        <h1>معرض المنتجات</h1>
+      </div>
+      <div class="rate-box">
+        <span>سعر الصرف (1$ =):</span>
+        <input type="number" id="exchangeRate" value="15000" onchange="updatePrices()">
+        <span>ل.س</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="بحث عن منتج..." oninput="filterProducts()">
+    <select id="categoryFilter" class="select-input" onchange="filterProducts()">
+      <option value="">جميع الأقسام</option>
+    </select>
+    <button class="admin-btn" onclick="openAdminModal()">إدارة المنتجات</button>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+    <!-- المنتجات تظهر هنا تلقائياً -->
+  </div>
+
+  <!-- نافذة إضافة وتعديل المنتجات -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 12px;">إضافة / تعديل منتج</h3>
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <input type="hidden" id="prodId">
+        <div class="form-group">
+          <label>اسم المنتج</label>
+          <input type="text" id="prodName" required>
+        </div>
+        <div class="form-group">
+          <label>السعر بالدولار ($)</label>
+          <input type="number" step="0.01" id="prodPriceUSD" required>
+        </div>
+        <div class="form-group">
+          <label>القسم</label>
+          <input type="text" id="prodCategory" placeholder="مثال: أجهزة، ملابس..." required>
+        </div>
+        <div class="form-group">
+          <label>مسار / رابط الصورة</label>
+          <input type="text" id="prodImage" placeholder="مثال: images/p1.jpg">
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-save">حفظ المنتج</button>
+          <button type="button" class="btn btn-close" onclick="closeAdminModal()">إغلاق</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // رقم الواتساب للتواصل الاستفساري
+    const WHATSAPP_NUMBER = "963900000000"; 
+
+    // البيانات الأولية للمتجر
+    let defaultProducts = [
+      { id: 1, name: "منتج تجريبي 1", priceUSD: 10, category: "عام", image: "images/p1.jpg" },
+      { id: 2, name: "منتج تجريبي 2", priceUSD: 25, category: "عام", image: "images/p2.jpg" }
+    ];
+
+    let products = JSON.parse(localStorage.getItem('my_products')) || defaultProducts;
+
+    function getRate() {
+      return parseFloat(document.getElementById('exchangeRate').value) || 1;
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('ar-SY').format(Math.round(num));
+    }
+
+    function renderProducts(list = products) {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+      const rate = getRate();
+
+      if (list.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
+        return;
+      }
+
+      list.forEach(p => {
+        const priceSYP = p.priceUSD * rate;
+        const msg = encodeURIComponent(`السلام عليكم، استفسار عن توفر المنتج:\n- الاسم: ${p.name}\n- السعر: ${formatNumber(priceSYP)} ل.س (${p.priceUSD}$)`);
+        const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="img-container">
+            <img src="${p.image || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150?text=بدون+صورة'">
+          </div>
+          <div class="product-details">
+            <div class="product-title">${p.name}</div>
+            <div class="price-box">
+              <div class="price-syp">${formatNumber(priceSYP)} ل.س</div>
+              <div class="price-usd">$${p.priceUSD}</div>
+            </div>
+            <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      updateCategories();
+    }
+
+    function updatePrices() {
+      filterProducts();
+    }
+
+    function filterProducts() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('categoryFilter').value;
+
+      const filtered = products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(search);
+        const matchesCat = cat === '' || p.category === cat;
+        return matchesSearch && matchesCat;
+      });
+
+      renderProducts(filtered);
+    }
+
+    function updateCategories() {
+      const select = document.getElementById('categoryFilter');
+      const currentCat = select.value;
+      const categories = [...new Set(products.map(p => p.category))];
+
+      select.innerHTML = '<option value="">جميع الأقسام</option>';
+      categories.forEach(c => {
+        if (c) {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          if (c === currentCat) opt.selected = true;
+          select.appendChild(opt);
+        }
+      });
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+      document.getElementById('productForm').reset();
+    }
+
+    function saveProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById('prodName').value;
+      const priceUSD = parseFloat(document.getElementById('prodPriceUSD').value);
+      const category = document.getElementById('prodCategory').value;
+      const image = document.getElementById('prodImage').value;
+
+      const newProd = {
+        id: Date.now(),
+        name,
+        priceUSD,
+        category,
+        image
+      };
+
+      products.push(newProd);
+      localStorage.setItem('my_products', JSON.stringify(products));
+      renderProducts();
+      closeAdminModal();
+    }
+
+    // التشغيل الأولي
+    renderProducts();
+  </script>
+</body>
+</html>
