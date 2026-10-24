@@ -83,4 +83,344 @@
     }
 
     .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .category-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .category-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background-color: #f9fafb;
+    }
+
+    .category-name {
+      padding: 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .controls-bar {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.9rem;
+      background: var(--card-bg);
+    }
+
+    .products-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .img-container {
+      width: 90px;
+      height: 90px;
+      min-width: 90px;
+      background-color: #f9fafb;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #f3f4f6;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-details {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .info-area {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .product-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .price-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-syp {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .price-usd {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .whatsapp-btn {
+      display: inline-block;
+      background-color: #25d366;
+      color: white;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #128c7e;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="logo-area" onclick="goHome()">
+        <h1>متجر حمامي</h1>
+      </div>
+      <div class="rate-display" id="rateDisplay">1$ = 15,000 ل.س</div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- قسم عرض الأقسام (الرئيسية) -->
+    <div id="categoriesView">
+      <div class="section-header">
+        <span class="section-title">أقسام المتجر</span>
+      </div>
+      <div class="categories-grid" id="categoriesGrid"></div>
+    </div>
+
+    <!-- قسم عرض المنتجات -->
+    <div id="productsView" class="hidden">
+      <div class="section-header">
+        <span class="section-title" id="currentCategoryTitle">المنتجات</span>
+      </div>
       
+      <div class="controls-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="بحث داخل هذا القسم..." oninput="filterProducts()">
+      </div>
+
+      <div class="products-list" id="productsGrid"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. الإعدادات الأساسية
+    // ==========================================
+    const WHATSAPP_NUMBER = "963997371320"; 
+    const EXCHANGE_RATE = 15000;
+
+    // ==========================================
+    // 2. قائمة الأقسام (10 أقسام رئيسية)
+    // ==========================================
+    let categories = [
+      { id: "games", name: "ألعاب وقودس", image: "https://i.ibb.co/4wRmsQRs/IMG-20261025-WA0000.jpg" },
+      { id: "apps", name: "تطبيقات مدفوعة", image: "https://via.placeholder.com/300?text=Apps" },
+      { id: "cards", name: "بطاقات شحن", image: "https://via.placeholder.com/300?text=Cards" },
+      { id: "social", name: "خدمات سوشيال ميديا", image: "https://via.placeholder.com/300?text=Social" },
+      { id: "accounts", name: "حسابات جاهزة", image: "https://via.placeholder.com/300?text=Accounts" },
+      { id: "software", name: "برامج كمبيوتر", image: "https://via.placeholder.com/300?text=Software" },
+      { id: "subscriptions", name: "اشتراكات نتفلكس ويوتيوب", image: "https://via.placeholder.com/300?text=Subscriptions" },
+      { id: "design", name: "تصاميم وجرافيك", image: "https://via.placeholder.com/300?text=Design" },
+      { id: "courses", name: "كورسات تعليمية", image: "https://via.placeholder.com/300?text=Courses" },
+      { id: "other", name: "منوعات أخرى", image: "https://via.placeholder.com/300?text=Other" }
+    ];
+
+    // ==========================================
+    // 3. قائمة المنتجات (أمثلة ظاهرة + الـ 200 منتج المخفية)
+    // ==========================================
+    let products = [
+      // --- منتجات ظاهرة كأمثلة ---
+      { id: 1, categoryId: "games", name: "حساب شاقة / لعبة", priceUSD: 15, image: "https://i.ibb.co/4wRmsQRs/IMG-20261025-WA0000.jpg", hidden: false },
+      { id: 2, categoryId: "apps", name: "تطبيق مدفوع النسخة الكاملة", priceUSD: 5, image: "https://via.placeholder.com/150", hidden: false }
+    ];
+
+    // إعداد الـ 200 منتج المخفية تلقائياً
+    for (let i = 3; i <= 202; i++) {
+      products.push({
+        id: i,
+        categoryId: "", 
+        name: `منتج جديد ${i}`,
+        priceUSD: 0,
+        image: "",
+        hidden: true 
+      });
+    }
+
+    let activeCategory = null;
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('ar-SY').format(Math.round(num));
+    }
+
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = '';
+      document.getElementById('rateDisplay').textContent = `1$ = ${formatNumber(EXCHANGE_RATE)} ل.س`;
+
+      categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.onclick = () => selectCategory(cat.id, cat.name);
+        card.innerHTML = `
+          <img src="${cat.image}" class="category-img" onerror="this.src='https://via.placeholder.com/150?text=قسم'">
+          <div class="category-name">${cat.name}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function selectCategory(catId, catName) {
+      activeCategory = catId;
+      document.getElementById('currentCategoryTitle').textContent = catName;
+      document.getElementById('categoriesView').classList.add('hidden');
+      document.getElementById('productsView').classList.remove('hidden');
+      document.getElementById('searchInput').value = '';
+      renderProducts();
+      window.scrollTo(0, 0);
+
+      history.pushState({ view: 'products', category: catId }, '', '');
+    }
+
+    function showCategories() {
+      activeCategory = null;
+      document.getElementById('productsView').classList.add('hidden');
+      document.getElementById('categoriesView').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function goHome() {
+      showCategories();
+      history.pushState({ view: 'home' }, '', '');
+    }
+
+    window.onpopstate = function(event) {
+      showCategories();
+    };
+
+    function renderProducts(searchQuery = '') {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+
+      let list = products.filter(p => p.categoryId === activeCategory && p.hidden !== true);
+
+      if (searchQuery) {
+        list = list.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات متاحة في هذا القسم حالياً.</p>';
+        return;
+      }
+
+      list.forEach(p => {
+        const priceSYP = p.priceUSD * EXCHANGE_RATE;
+        const msg = encodeURIComponent(`السلام عليكم، استفسار عن توفر المنتج:\n- الاسم: ${p.name}\n- السعر: ${formatNumber(priceSYP)} ل.س (${p.priceUSD}$)`);
+        const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="img-container">
+            <img src="${p.image || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150?text=بدون+صورة'">
+          </div>
+          <div class="product-details">
+            <div class="info-area">
+              <div class="product-title">${p.name}</div>
+              <div class="price-box">
+                <span class="price-syp">${formatNumber(priceSYP)} ل.س</span>
+                <span class="price-usd">$${p.priceUSD}</span>
+              </div>
+            </div>
+            <div class="action-area">
+              <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('searchInput').value;
+      renderProducts(query);
+    }
+
+    history.replaceState({ view: 'home' }, '', '');
+    renderCategories();
+  </script>
+</body>
+</html>
