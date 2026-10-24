@@ -322,7 +322,7 @@
         </div>
         <div class="form-group">
           <label>مسار / رابط الصورة</label>
-          <input type="text" id="prodImage" placeholder="مثال: images/p1.jpg">
+          <input type="text" id="prodImage" placeholder="مثال: https://raw.githubusercontent.com/...">
         </div>
         <div class="btn-group">
           <button type="submit" class="btn btn-save">حفظ المنتج</button>
@@ -336,10 +336,15 @@
     // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
 
-    // البيانات الأولية للمتجر
+    // المنتجات (تم إضافة صورتك المرفوعة برابطها المباشر)
     let defaultProducts = [
-      { id: 1, name: "منتج تجريبي 1", priceUSD: 10, category: "عام", image: "images/p1.jpg" },
-      { id: 2, name: "منتج تجريبي 2", priceUSD: 25, category: "عام", image: "images/p2.jpg" }
+      { 
+        id: 1, 
+        name: "حساب شاقة / لعبة", 
+        priceUSD: 15, 
+        category: "ألعاب", 
+        image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" 
+      }
     ];
 
     let products = JSON.parse(localStorage.getItem('my_products')) || defaultProducts;
