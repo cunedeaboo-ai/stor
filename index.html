@@ -287,7 +287,7 @@
     // 2. قائمة الأقسام (10 أقسام رئيسية)
     // ==========================================
     let categories = [
-      { id: "games", name: "ألعاب وقودس", image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" },
+      { id: "games", name: "ألعاب وقودس", image: "https://i.ibb.co/Kx1b8zZ4/image.png" },
       { id: "apps", name: "تطبيقات مدفوعة", image: "https://via.placeholder.com/300?text=Apps" },
       { id: "cards", name: "بطاقات شحن", image: "https://via.placeholder.com/300?text=Cards" },
       { id: "social", name: "خدمات سوشيال ميديا", image: "https://via.placeholder.com/300?text=Social" },
@@ -300,23 +300,23 @@
     ];
 
     // ==========================================
-    // 3. قائمة المنتجات (أمثلة ظاهرة + حلقة تلقائية لإنشاء الـ 200 منتج المخفية بسرعة ونظافة)
+    // 3. قائمة المنتجات المجهزة (أمثلة + الـ 200 منتج المخفية)
     // ==========================================
     let products = [
       // --- منتجات ظاهرة كأمثلة ---
-      { id: 1, categoryId: "games", name: "حساب شاقة / لعبة", priceUSD: 15, image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg", hidden: false },
-      { id: 2, categoryId: "apps", name: "تطبيق مدفوع النسخة الكاملة", priceUSD: 5, image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg", hidden: false }
+      { id: 1, categoryId: "games", name: "حساب شاقة / لعبة", priceUSD: 15, image: "https://i.ibb.co/Kx1b8zZ4/image.png", hidden: false },
+      { id: 2, categoryId: "apps", name: "تطبيق مدفوع النسخة الكاملة", priceUSD: 5, image: "https://i.ibb.co/Kx1b8zZ4/image.png", hidden: false }
     ];
 
-    // تمديد وتجهيز الـ 200 منتج في الخلفية تلقائياً وبشكل مخفي وصحيح 100%
+    // إعداد الـ 200 منتج المخفية تلقائياً
     for (let i = 3; i <= 202; i++) {
       products.push({
         id: i,
-        categoryId: "", // فارغ لكي لا يظهر إلا إذا حددت اسم القسم لاحقاً
+        categoryId: "", 
         name: `منتج جديد ${i}`,
         priceUSD: 0,
         image: "",
-        hidden: true // مخفي تماماً
+        hidden: true 
       });
     }
 
@@ -392,7 +392,6 @@
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
         const card = document.createElement('div');
-        card.className.B = 'product-card';
         card.className = 'product-card';
         card.innerHTML = `
           <div class="img-container">
