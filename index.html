@@ -244,7 +244,7 @@
 
   <header>
     <div class="header-container">
-      <div class="logo-area" onclick="showCategories()">
+      <div class="logo-area" onclick="goHome()">
         <h1>متجر الأقسام</h1>
       </div>
       <div class="rate-display" id="rateDisplay">1$ = 15,000 ل.س</div>
@@ -341,6 +341,9 @@
       document.getElementById('searchInput').value = '';
       renderProducts();
       window.scrollTo(0, 0);
+
+      // إضافة حالة جديدة لتاريخ المتصفح ليتمكن زر الرجوع في الهاتف من التقاطها
+      history.pushState({ view: 'products', category: catId }, '', '');
     }
 
     function showCategories() {
@@ -349,6 +352,17 @@
       document.getElementById('categoriesView').classList.remove('hidden');
       window.scrollTo(0, 0);
     }
+
+    function goHome() {
+      showCategories();
+      // تحديث التاريخ عند الضغط على اللوجو
+      history.pushState({ view: 'home' }, '', '');
+    }
+
+    // الاستماع لزر الرجوع في الهاتف لمنع إغلاق الموقع وإرجاع المستخدم للأقسام
+    window.onpopstate = function(event) {
+      showCategories();
+    };
 
     function renderProducts(searchQuery = '') {
       const grid = document.getElementById('productsGrid');
@@ -398,6 +412,8 @@
       renderProducts(query);
     }
 
+    // تعيين الحالة الأولية
+    history.replaceState({ view: 'home' }, '', '');
     renderCategories();
   </script>
 </body>
