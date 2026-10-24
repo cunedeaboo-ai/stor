@@ -69,7 +69,6 @@
       padding: 0 16px;
     }
 
-    /* شريط العنوان والرجوع */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -98,7 +97,6 @@
       background: #d1d5db;
     }
 
-    /* شبكة الأقسام (مطابقة لرسمتك المربعة) */
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -145,7 +143,6 @@
       border-top: 1px solid var(--border-color);
     }
 
-    /* شريط البحث داخل المنتجات */
     .controls-bar {
       margin-bottom: 16px;
       display: flex;
@@ -162,7 +159,6 @@
       background: var(--card-bg);
     }
 
-    /* قائمة المنتجات الأفقية */
     .products-list {
       display: flex;
       flex-direction: column;
@@ -272,30 +268,26 @@
 
   <div class="container">
     
-    <!-- قسم عرض الأقسام (الشكل الشبكي المربع) -->
+    <!-- قسم عرض الأقسام -->
     <div id="categoriesView">
       <div class="section-header">
         <span class="section-title">أقسام المتجر</span>
       </div>
-      <div class="categories-grid" id="categoriesGrid">
-        <!-- يتم تعبئة الأقسام تلقائياً -->
-      </div>
+      <div class="categories-grid" id="categoriesGrid"></div>
     </div>
 
-    <!-- قسم عرض المنتجات داخل القسم المختار -->
+    <!-- قسم عرض المنتجات -->
     <div id="productsView" class="hidden">
       <div class="section-header">
         <span class="section-title" id="currentCategoryTitle">المنتجات</span>
-        <button class="back-btn" onclick="showCategories()">← رجوع للأقسام</button>
+        <button type="button" class="back-btn" onclick="showCategories()">← رجوع للأقسام</button>
       </div>
       
       <div class="controls-bar">
         <input type="text" id="searchInput" class="search-input" placeholder="بحث داخل هذا القسم..." oninput="filterProducts()">
       </div>
 
-      <div class="products-list" id="productsGrid">
-        <!-- يتم تعبئة المنتجات تلقائياً -->
-      </div>
+      <div class="products-list" id="productsGrid"></div>
     </div>
 
   </div>
@@ -304,7 +296,6 @@
     const WHATSAPP_NUMBER = "963997371320"; 
     const EXCHANGE_RATE = 15000;
 
-    // 10 أقسام رئيسية للمتجر (مع صور افتراضية، يمكنك تغيير روابط الصور وأسماء الأقسام)
     let categories = [
       { id: "games", name: "ألعاب وقودس", image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" },
       { id: "apps", name: "تطبيقات مدفوعة", image: "https://via.placeholder.com/300?text=Apps" },
@@ -318,7 +309,6 @@
       { id: "other", name: "منوعات أخرى", image: "https://via.placeholder.com/300?text=Other" }
     ];
 
-    // قائمة المنتجات وتوزيعها على الأقسام عبر (categoryId)
     let products = [
       { 
         id: 1, 
@@ -342,7 +332,6 @@
       return new Intl.NumberFormat('ar-SY').format(Math.round(num));
     }
 
-    // عرض الأقسام بشكل شبكة مربعة
     function renderCategories() {
       const grid = document.getElementById('categoriesGrid');
       grid.innerHTML = '';
@@ -360,7 +349,6 @@
       });
     }
 
-    // الانتقال لمنتجات القسم المحدد
     function selectCategory(catId, catName) {
       activeCategory = catId;
       document.getElementById('currentCategoryTitle').textContent = catName;
@@ -370,14 +358,12 @@
       renderProducts();
     }
 
-    // العودة لواجهة الأقسام
     function showCategories() {
       activeCategory = null;
       document.getElementById('productsView').classList.add('hidden');
       document.getElementById('categoriesView').classList.remove('hidden');
     }
 
-    // عرض المنتجات الخاصة بالقسم الحالي
     function renderProducts(searchQuery = '') {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
@@ -426,7 +412,6 @@
       renderProducts(query);
     }
 
-    // البدء بعرض الأقسام
     renderCategories();
   </script>
 </body>
