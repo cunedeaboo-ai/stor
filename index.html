@@ -52,7 +52,6 @@
       color: var(--text-main);
     }
 
-    /* عرض سعر الصرف التلقائي في الأعلى */
     .rate-display {
       font-size: 0.85rem;
       background: #ecfdf5;
@@ -87,7 +86,6 @@
       min-width: 160px;
     }
 
-    /* قائمة المنتجات الأفقية */
     .products-list {
       max-width: 900px;
       margin: 0 auto;
@@ -97,7 +95,6 @@
       gap: 10px;
     }
 
-    /* بطاقة المنتج الأفقية */
     .product-card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -110,7 +107,6 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
-    /* صورة المنتج على اليمين بحجم ثابت */
     .img-container {
       width: 90px;
       height: 90px;
@@ -130,7 +126,6 @@
       object-fit: cover;
     }
 
-    /* تفاصيل المنتج */
     .product-details {
       display: flex;
       flex: 1;
@@ -198,7 +193,7 @@
       <div class="logo-area">
         <h1>معرض المنتجات</h1>
       </div>
-      <div class="rate-display" id="rateStatus">جاري تحديث السعر...</div>
+      <div class="rate-display" id="rateStatus">جاري جلب السعر...</div>
     </div>
   </header>
 
@@ -214,13 +209,11 @@
   </div>
 
   <script>
-    // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
-
-    // سعر صرف افتراضي احتياطي
+    
+    // ضع سعر الصرف الحالي هنا، وسيتم تحديثه تلقائياً إذا نجح جلب الـ API
     let currentExchangeRate = 15000;
 
-    // قائمة المنتجات المعروضة
     let products = [
       { 
         id: 1, 
@@ -231,20 +224,24 @@
       }
     ];
 
-    // دالة لجلب سعر الصرف المحدث تلقائياً من الـ API الجديد
     async function fetchLiveExchangeRate() {
       try {
-        const response = await fetch("https://open.er-api.com/v6/latest/USD");
+        // استخدام وسيط مخصص لتجاوز حظر المتصفحات على GitHub Pages
+        const response = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://open.er-api.com/v6/latest/USD"));
         if (response.ok) {
-          const data = await response.json();
+          const resData = await response.json();
+          const data = JSON.parse(resData.contents);
           if (data && data.rates && data.rates.SYP) {
             currentExchangeRate = data.rates.SYP;
             document.getElementById('rateStatus').textContent = `1$ = ${Math.round(currentExchangeRate)} ل.س`;
+            renderProducts();
+            return;
           }
         }
+        throw new Error("فشل الجلب");
       } catch (error) {
-        document.getElementById('rateStatus').textContent = `1$ = ${currentExchangeRate} ل.س (احتياطي)`;
-      } finally {
+        // في حال الحظر، سيعتمد السعر المعرف في المتغير أعلاه
+        document.getElementById('rateStatus').textContent = `1$ = ${currentExchangeRate} ل.س`;
         renderProducts();
       }
     }
@@ -322,7 +319,6 @@
       });
     }
 
-    // جلب السعر المحدث فور فتح الموقع
     fetchLiveExchangeRate();
   </script>
 </body>
