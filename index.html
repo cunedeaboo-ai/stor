@@ -193,7 +193,7 @@
       <div class="logo-area">
         <h1>معرض المنتجات</h1>
       </div>
-      <div class="rate-display" id="rateStatus">جاري جلب السعر...</div>
+      <div class="rate-display" id="rateDisplay">1$ = 15,000 ل.س</div>
     </div>
   </header>
 
@@ -209,11 +209,13 @@
   </div>
 
   <script>
+    // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
-    
-    // ضع سعر الصرف الحالي هنا، وسيتم تحديثه تلقائياً إذا نجح جلب الـ API
-    let currentExchangeRate = 15000;
 
+    // سعر الصرف الثابت (يمكنك تعديل الرقم هنا متى شئت يدوياً)
+    const EXCHANGE_RATE = 15000;
+
+    // قائمة المنتجات المعروضة
     let products = [
       { 
         id: 1, 
@@ -224,28 +226,6 @@
       }
     ];
 
-    async function fetchLiveExchangeRate() {
-      try {
-        // استخدام وسيط مخصص لتجاوز حظر المتصفحات على GitHub Pages
-        const response = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://open.er-api.com/v6/latest/USD"));
-        if (response.ok) {
-          const resData = await response.json();
-          const data = JSON.parse(resData.contents);
-          if (data && data.rates && data.rates.SYP) {
-            currentExchangeRate = data.rates.SYP;
-            document.getElementById('rateStatus').textContent = `1$ = ${Math.round(currentExchangeRate)} ل.س`;
-            renderProducts();
-            return;
-          }
-        }
-        throw new Error("فشل الجلب");
-      } catch (error) {
-        // في حال الحظر، سيعتمد السعر المعرف في المتغير أعلاه
-        document.getElementById('rateStatus').textContent = `1$ = ${currentExchangeRate} ل.س`;
-        renderProducts();
-      }
-    }
-
     function formatNumber(num) {
       return new Intl.NumberFormat('ar-SY').format(Math.round(num));
     }
@@ -254,13 +234,16 @@
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
 
+      // تحديث عرض سعر الصرف في الهيدر تلقائياً بناءً على القيمة الثابتة
+      document.getElementById('rateDisplay').textContent = `1$ = ${formatNumber(EXCHANGE_RATE)} ل.س`;
+
       if (list.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
         return;
       }
 
       list.forEach(p => {
-        const priceSYP = p.priceUSD * currentExchangeRate;
+        const priceSYP = p.priceUSD * EXCHANGE_RATE;
         const msg = encodeURIComponent(`السلام عليكم، استفسار عن توفر المنتج:\n- الاسم: ${p.name}\n- السعر: ${formatNumber(priceSYP)} ل.س (${p.priceUSD}$)`);
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
@@ -278,7 +261,7 @@
                 <span class="price-usd">$${p.priceUSD}</span>
               </div>
             </div>
-            <div class="action-area">
+            .action-area">
               <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
             </div>
           </div>
@@ -319,7 +302,8 @@
       });
     }
 
-    fetchLiveExchangeRate();
+    // التشغيل الأولي
+    renderProducts();
   </script>
 </body>
 </html>
