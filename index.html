@@ -82,19 +82,20 @@
       color: var(--text-main);
     }
 
-    .back-btn {
-      background: #e5e7eb;
-      border: none;
+    /* زر خروج / رجوع للأقسام بتصميم أنيق يشبه التطبيقات */
+    .exit-btn {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
       padding: 6px 14px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
       font-size: 0.85rem;
-      color: var(--text-main);
     }
 
-    .back-btn:hover {
-      background: #d1d5db;
+    .exit-btn:hover {
+      background: #fecaca;
     }
 
     .categories-grid {
@@ -280,7 +281,7 @@
     <div id="productsView" class="hidden">
       <div class="section-header">
         <span class="section-title" id="currentCategoryTitle">المنتجات</span>
-        <button type="button" class="back-btn" onclick="showCategories()">← رجوع للأقسام</button>
+        <button type="button" class="exit-btn" onclick="showCategories()">خروج من القسم ✕</button>
       </div>
       
       <div class="controls-bar">
@@ -356,6 +357,9 @@
       document.getElementById('productsView').classList.remove('hidden');
       document.getElementById('searchInput').value = '';
       renderProducts();
+      
+      // إضافة حالة لتاريخ المتصفح لكي يعمل زر الهاتف (رجوع) بشكل طبيعي كأنه تطبيق
+      history.pushState({ view: 'products', cat: catId }, '', '');
     }
 
     function showCategories() {
@@ -363,6 +367,11 @@
       document.getElementById('productsView').classList.add('hidden');
       document.getElementById('categoriesView').classList.remove('hidden');
     }
+
+    // الاستماع لزر الرجوع الخاص بالهاتف لتنفيذ الخروج من القسم بسلاسة
+    window.onpopstate = function(event) {
+      showCategories();
+    };
 
     function renderProducts(searchQuery = '') {
       const grid = document.getElementById('productsGrid');
@@ -385,6 +394,7 @@
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
         const card = document.createElement('div');
+        card.className, 'product-card';
         card.className = 'product-card';
         card.innerHTML = `
           <div class="img-container">
