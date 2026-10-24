@@ -39,19 +39,13 @@
     }
 
     .header-container {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-    }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .logo-area h1 {
@@ -85,7 +79,7 @@
     }
 
     .controls-bar {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 16px auto;
       padding: 0 16px;
       display: flex;
@@ -105,7 +99,7 @@
 
     .search-input {
       flex: 1;
-      min-width: 180px;
+      min-width: 160px;
     }
 
     .admin-btn {
@@ -119,47 +113,41 @@
       font-size: 0.85rem;
     }
 
-    /* شبكة المنتجات بطاقات أصفر وأصغر */
-    .products-grid {
-      max-width: 1100px;
+    /* قائمة المنتجات الأفقي */
+    .products-list {
+      max-width: 900px;
       margin: 0 auto;
       padding: 0 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    @media (min-width: 640px) {
-      .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 16px;
-      }
-    }
-
+    /* بطاقة المنتج الأفقية */
     .product-card {
       background: var(--card-bg);
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--border-color);
       display: flex;
-      flex-direction: column;
-      transition: transform 0.2s;
+      align-items: center;
+      padding: 10px;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
-    .product-card:hover {
-      transform: translateY(-2px);
-    }
-
-    /* تصغير حجم الصورة بشكل ممتاز */
+    /* صورة المنتج على اليمين */
     .img-container {
-      width: 100%;
-      height: 120px;
+      width: 90px;
+      height: 90px;
+      min-width: 90px;
       background-color: #f9fafb;
+      border-radius: 8px;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      border-bottom: 1px solid #f3f4f6;
+      border: 1px solid #f3f4f6;
     }
 
     .img-container img {
@@ -168,29 +156,31 @@
       object-fit: cover;
     }
 
+    /* تفاصيل المنتج في المنتصف واليسار */
     .product-details {
-      padding: 10px;
       display: flex;
-      flex-direction: column;
       flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .info-area {
+      flex: 1;
+      min-width: 120px;
     }
 
     .product-title {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      margin-bottom: 4px;
       color: var(--text-main);
-      line-height: 1.3;
-      height: 2.6em;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      margin-bottom: 4px;
     }
 
     .price-box {
-      margin-top: auto;
-      padding-top: 6px;
+      display: flex;
+      flex-direction: column;
     }
 
     .price-syp {
@@ -204,18 +194,22 @@
       color: var(--text-muted);
     }
 
+    .action-area {
+      display: flex;
+      align-items: center;
+    }
+
     .whatsapp-btn {
-      display: block;
-      width: 100%;
+      display: inline-block;
       background-color: #25d366;
       color: white;
       text-align: center;
-      padding: 6px;
-      border-radius: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 700;
       font-size: 0.8rem;
-      margin-top: 8px;
+      white-space: nowrap;
     }
 
     .whatsapp-btn:hover {
@@ -304,7 +298,7 @@
     <button class="admin-btn" onclick="openAdminModal()">إدارة المنتجات</button>
   </div>
 
-  <div class="products-grid" id="productsGrid">
+  <div class="products-list" id="productsGrid">
     <!-- المنتجات تظهر هنا تلقائياً -->
   </div>
 
@@ -364,7 +358,7 @@
       const rate = getRate();
 
       if (list.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
+        grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
         return;
       }
 
@@ -380,12 +374,16 @@
             <img src="${p.image || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150?text=بدون+صورة'">
           </div>
           <div class="product-details">
-            <div class="product-title">${p.name}</div>
-            <div class="price-box">
-              <div class="price-syp">${formatNumber(priceSYP)} ل.س</div>
-              <div class="price-usd">$${p.priceUSD}</div>
+            <div class="info-area">
+              <div class="product-title">${p.name}</div>
+              <div class="price-box">
+                <span class="price-syp">${formatNumber(priceSYP)} ل.س</span>
+                <span class="price-usd">$${p.priceUSD}</span>
+              </div>
             </div>
-            <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
+            <div class="action-area">
+              <a href="${waUrl}" target="_blank" class="whatsapp-btn">استفسار واتساب</a>
+            </div>
           </div>
         `;
         grid.appendChild(card);
