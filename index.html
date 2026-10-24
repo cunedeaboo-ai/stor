@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> متجر حمامي</title>
+  <title>متجر حمامي</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -245,7 +245,7 @@
   <header>
     <div class="header-container">
       <div class="logo-area" onclick="goHome()">
-        <h1> متجر حمامي</h1>
+        <h1>متجر حمامي</h1>
       </div>
       <div class="rate-display" id="rateDisplay">1$ = 15,000 ل.س</div>
     </div>
@@ -300,65 +300,25 @@
     ];
 
     // ==========================================
-    // 3. قائمة المنتجات المجهزة (بدون أقسام وبدون صور للمنتجات المخفية)
-    // عند التعديل: ضع اسم القسم المناسب في categoryId (مثل: "games" أو "apps") واجعل hidden: false
+    // 3. قائمة المنتجات (أمثلة ظاهرة + حلقة تلقائية لإنشاء الـ 200 منتج المخفية بسرعة ونظافة)
     // ==========================================
     let products = [
       // --- منتجات ظاهرة كأمثلة ---
       { id: 1, categoryId: "games", name: "حساب شاقة / لعبة", priceUSD: 15, image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg", hidden: false },
-      { id: 2, categoryId: "apps", name: "تطبيق مدفوع النسخة الكاملة", priceUSD: 5, image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg", hidden: false },
-
-      // --- 200 منتج مخفي بدون قسم وبدون صورة جاهزة للتعديل السريع ---
-      { id: 3, categoryId: "", name: "منتج جديد 3", priceUSD: 0, image: "", hidden: true },
-      { id: 4, categoryId: "", name: "منتج جديد 4", priceUSD: 0, image: "", hidden: true },
-      { id: 5, categoryId: "", name: "منتج جديد 5", priceUSD: 0, image: "", hidden: true },
-      { id: 6, categoryId: "", name: "منتج جديد 6", priceUSD: 0, image: "", hidden: true },
-      { id: 7, categoryId: "", name: "منتج جديد 7", priceUSD: 0, image: "", hidden: true },
-      { id: 8, categoryId: "", name: "منتج جديد 8", priceUSD: 0, image: "", hidden: true },
-      { id: 9, categoryId: "", name: "منتج جديد 9", priceUSD: 0, image: "", hidden: true },
-      { id: 10, categoryId: "", name: "منتج جديد 10", priceUSD: 0, image: "", hidden: true },
-      { id: 11, categoryId: "", name: "منتج جديد 11", priceUSD: 0, image: "", hidden: true },
-      { id: 12, categoryId: "", name: "منتج جديد 12", priceUSD: 0, image: "", hidden: true },
-      { id: 13, categoryId: "", name: "منتج جديد 13", priceUSD: 0, image: "", hidden: true },
-      { id: 14, categoryId: "", name: "منتج جديد 14", priceUSD: 0, image: "", hidden: true },
-      { id: 15, categoryId: "", name: "منتج جديد 15", priceUSD: 0, image: "", hidden: true },
-      { id: 16, categoryId: "", name: "منتج جديد 16", priceUSD: 0, image: "", hidden: true },
-      { id: 17, categoryId: "", name: "منتج جديد 17", priceUSD: 0, image: "", hidden: true },
-      { id: 18, categoryId: "", name: "منتج جديد 18", priceUSD: 0, image: "", hidden: true },
-      { id: 19, categoryId: "", name: "منتج جديد 19", priceUSD: 0, image: "", hidden: true },
-      { id: 20, categoryId: "", name: "منتج جديد 20", priceUSD: 0, image: "", hidden: true },
-      { id: 21, categoryId: "", name: "منتج جديد 21", priceUSD: 0, image: "", hidden: true },
-      { id: 22, categoryId: "", name: "منتج جديد 22", priceUSD: 0, image: "", hidden: true },
-      { id: 23, categoryId: "", name: "منتج جديد 23", priceUSD: 0, image: "", hidden: true },
-      { id: 24, categoryId: "", name: "منتج جديد 24", priceUSD: 0, image: "", hidden: true },
-      { id: 25, categoryId: "", name: "منتج جديد 25", priceUSD: 0, image: "", hidden: true },
-      { id: 26, categoryId: "", name: "منتج جديد 26", priceUSD: 0, image: "", hidden: true },
-      { id: 27, categoryId: "", name: "منتج جديد 27", priceUSD: 0, image: "", hidden: true },
-      { id: 28, categoryId: "", name: "منتج جديد 28", priceUSD: 0, image: "", hidden: true },
-      { id: 29, categoryId: "", name: "منتج جديد 29", priceUSD: 0, image: "", hidden: true },
-      { id: 30, categoryId: "", name: "منتج جديد 30", priceUSD: 0, image: "", hidden: true },
-      { id: 31, categoryId: "", name: "منتج جديد 31", priceUSD: 0, image: "", hidden: true },
-      { id: 32, categoryId: "", name: "منتج جديد 32", priceUSD: 0, image: "", hidden: true },
-      { id: 33, categoryId: "", name: "منتج جديد 33", priceUSD: 0, image: "", hidden: true },
-      { id: 34, categoryId: "", name: "منتج جديد 34", priceUSD: 0, image: "", hidden: true },
-      { id: 35, categoryId: "", name: "منتج جديد 35", priceUSD: 0, image: "", hidden: true },
-      { id: 36, categoryId: "", name: "منتج جديد 36", priceUSD: 0, image: "", hidden: true },
-      { id: 37, categoryId: "", name: "منتج جديد 37", priceUSD: 0, image: "", hidden: true },
-      { id: 38, categoryId: "", name: "منتج جديد 38", priceUSD: 0, image: "", hidden: true },
-      { id: 39, categoryId: "", name: "منتج جديد 39", priceUSD: 0, image: "", hidden: true },
-      { id: 40, categoryId: "", name: "منتج جديد 40", priceUSD: 0, image: "", hidden: true },
-      { id: 41, categoryId: "", name: "منتج جديد 41", priceUSD: 0, image: "", hidden: true },
-      { id: 42, categoryId: "", name: "منتج جديد 42", priceUSD: 0, image: "", hidden: true },
-      { id: 43, categoryId: "", name: "منتج جديد 43", priceUSD: 0, image: "", hidden: true },
-      { id: 44, categoryId: "", name: "منتج جديد 44", priceUSD: 0, image: "", hidden: true },
-      { id: 45, categoryId: "", name: "منتج جديد 45", priceUSD: 0, image: "", hidden: true },
-      { id: 46, categoryId: "", name: "منتج جديد 46", priceUSD: 0, image: "", hidden: true },
-      { id: 47, categoryId: "", name: "منتج جديد 47", priceUSD: 0, image: "", hidden: true },
-      { id: 48, categoryId: "", name: "منتج جديد 48", priceUSD: 0, image: "", hidden: true },
-      { id: 49, categoryId: "", name: "منتج جديد 49", priceUSD: 0, image: "", hidden: true },
-      { id: 50, categoryId: "", name: "منتج جديد 50", priceUSD: 0, image: "", hidden: true }
-      // أسلوب سطر طولي بسيط جاهز للنسخ والتوسعة حتى 202
+      { id: 2, categoryId: "apps", name: "تطبيق مدفوع النسخة الكاملة", priceUSD: 5, image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg", hidden: false }
     ];
+
+    // تمديد وتجهيز الـ 200 منتج في الخلفية تلقائياً وبشكل مخفي وصحيح 100%
+    for (let i = 3; i <= 202; i++) {
+      products.push({
+        id: i,
+        categoryId: "", // فارغ لكي لا يظهر إلا إذا حددت اسم القسم لاحقاً
+        name: `منتج جديد ${i}`,
+        priceUSD: 0,
+        image: "",
+        hidden: true // مخفي تماماً
+      });
+    }
 
     let activeCategory = null;
 
@@ -432,6 +392,7 @@
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
         const card = document.createElement('div');
+        card.className.B = 'product-card';
         card.className = 'product-card';
         card.innerHTML = `
           <div class="img-container">
