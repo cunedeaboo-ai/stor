@@ -206,8 +206,8 @@
     // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
 
-    // سعر الصرف المعتمد للمنتجات (يمكنك تعديل القيمة هنا عند الحاجة)
-    const EXCHANGE_RATE = 15000;
+    // سعر الصرف الافتراضي الاحتياطي (إذا لم يتوفر اتصال بالبورصة)
+    let exchangeRate = 15000;
 
     // قائمة المنتجات المعروضة
     let products = [
@@ -219,6 +219,23 @@
         image: "https://raw.githubusercontent.com/cunedeaboo-ai/stor/main/Screenshot_2026-10-22-12-28-29-614_com.boundless.jawaker.jpg" 
       }
     ];
+
+    // جلب سعر الصرف تلقائياً من البورصة/السوق
+    async function fetchLiveExchangeRate() {
+      try {
+        const response = await fetch("https://api.exchanger.sy/en");
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.USD && data.USD.Sell) {
+            exchangeRate = parseFloat(data.USD.Sell);
+          }
+        }
+      } catch (error) {
+        console.log("استخدام سعر الصرف الاحتياطي:", exchangeRate);
+      } finally {
+        renderProducts();
+      }
+    }
 
     function formatNumber(num) {
       return new Intl.NumberFormat('ar-SY').format(Math.round(num));
@@ -234,7 +251,7 @@
       }
 
       list.forEach(p => {
-        const priceSYP = p.priceUSD * EXCHANGE_RATE;
+        const priceSYP = p.priceUSD * exchangeRate;
         const msg = encodeURIComponent(`السلام عليكم، استفسار عن توفر المنتج:\n- الاسم: ${p.name}\n- السعر: ${formatNumber(priceSYP)} ل.س (${p.priceUSD}$)`);
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
@@ -293,8 +310,8 @@
       });
     }
 
-    // التشغيل الأولي
-    renderProducts();
+    // جلب سعر الصرف والتشغيل عند التحميل
+    fetchLiveExchangeRate();
   </script>
 </body>
 </html>
