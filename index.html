@@ -82,7 +82,6 @@
       color: var(--text-main);
     }
 
-    /* زر خروج / رجوع للأقسام بتصميم أنيق يشبه التطبيقات */
     .exit-btn {
       background: #fee2e2;
       color: #991b1b;
@@ -269,7 +268,7 @@
 
   <div class="container">
     
-    <!-- قسم عرض الأقسام -->
+    <!-- قسم عرض الأقسام (الرئيسية) -->
     <div id="categoriesView">
       <div class="section-header">
         <span class="section-title">أقسام المتجر</span>
@@ -277,7 +276,7 @@
       <div class="categories-grid" id="categoriesGrid"></div>
     </div>
 
-    <!-- قسم عرض المنتجات -->
+    <!-- قسم عرض المنتجات (يظهر ويختفي داخلياً) -->
     <div id="productsView" class="hidden">
       <div class="section-header">
         <span class="section-title" id="currentCategoryTitle">المنتجات</span>
@@ -357,21 +356,15 @@
       document.getElementById('productsView').classList.remove('hidden');
       document.getElementById('searchInput').value = '';
       renderProducts();
-      
-      // إضافة حالة لتاريخ المتصفح لكي يعمل زر الهاتف (رجوع) بشكل طبيعي كأنه تطبيق
-      history.pushState({ view: 'products', cat: catId }, '', '');
+      window.scrollTo(0, 0);
     }
 
     function showCategories() {
       activeCategory = null;
       document.getElementById('productsView').classList.add('hidden');
       document.getElementById('categoriesView').classList.remove('hidden');
+      window.scrollTo(0, 0);
     }
-
-    // الاستماع لزر الرجوع الخاص بالهاتف لتنفيذ الخروج من القسم بسلاسة
-    window.onpopstate = function(event) {
-      showCategories();
-    };
 
     function renderProducts(searchQuery = '') {
       const grid = document.getElementById('productsGrid');
@@ -394,7 +387,6 @@
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
         const card = document.createElement('div');
-        card.className, 'product-card';
         card.className = 'product-card';
         card.innerHTML = `
           <div class="img-container">
