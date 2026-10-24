@@ -42,40 +42,15 @@
       max-width: 900px;
       margin: 0 auto;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 12px;
     }
 
     .logo-area h1 {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: var(--text-main);
-    }
-
-    .rate-box {
-      background-color: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      padding: 6px 12px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #065f46;
-    }
-
-    .rate-box input {
-      width: 90px;
-      padding: 4px 8px;
-      border: 1px solid #6ee7b7;
-      border-radius: 6px;
-      font-weight: 700;
       text-align: center;
-      outline: none;
-      font-size: 0.9rem;
     }
 
     .controls-bar {
@@ -100,17 +75,6 @@
     .search-input {
       flex: 1;
       min-width: 160px;
-    }
-
-    .admin-btn {
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.85rem;
     }
 
     /* قائمة المنتجات الأفقي */
@@ -215,64 +179,6 @@
     .whatsapp-btn:hover {
       background-color: #128c7e;
     }
-
-    /* Modal / لوحة الإدارة */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      width: 100%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      margin-bottom: 4px;
-      font-weight: 700;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .btn {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .btn-save { background: var(--primary); color: white; }
-    .btn-close { background: #e5e7eb; color: #374151; }
   </style>
 </head>
 <body>
@@ -282,11 +188,6 @@
       <div class="logo-area">
         <h1>معرض المنتجات</h1>
       </div>
-      <div class="rate-box">
-        <span>سعر الصرف (1$ =):</span>
-        <input type="number" id="exchangeRate" value="15000" onchange="updatePrices()">
-        <span>ل.س</span>
-      </div>
     </div>
   </header>
 
@@ -295,49 +196,21 @@
     <select id="categoryFilter" class="select-input" onchange="filterProducts()">
       <option value="">جميع الأقسام</option>
     </select>
-    <button class="admin-btn" onclick="openAdminModal()">إدارة المنتجات</button>
   </div>
 
   <div class="products-list" id="productsGrid">
     <!-- المنتجات تظهر هنا تلقائياً -->
   </div>
 
-  <!-- نافذة إضافة وتعديل المنتجات -->
-  <div class="modal" id="adminModal">
-    <div class="modal-content">
-      <h3 style="margin-bottom: 12px;">إضافة / تعديل منتج</h3>
-      <form id="productForm" onsubmit="saveProduct(event)">
-        <input type="hidden" id="prodId">
-        <div class="form-group">
-          <label>اسم المنتج</label>
-          <input type="text" id="prodName" required>
-        </div>
-        <div class="form-group">
-          <label>السعر بالدولار ($)</label>
-          <input type="number" step="0.01" id="prodPriceUSD" required>
-        </div>
-        <div class="form-group">
-          <label>القسم</label>
-          <input type="text" id="prodCategory" placeholder="مثال: أجهزة، ملابس..." required>
-        </div>
-        <div class="form-group">
-          <label>مسار / رابط الصورة</label>
-          <input type="text" id="prodImage" placeholder="مثال: https://raw.githubusercontent.com/...">
-        </div>
-        <div class="btn-group">
-          <button type="submit" class="btn btn-save">حفظ المنتج</button>
-          <button type="button" class="btn btn-close" onclick="closeAdminModal()">إغلاق</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
     // رقم الواتساب الخاص بك
     const WHATSAPP_NUMBER = "963997371320"; 
 
-    // المنتجات (تم إضافة صورتك المرفوعة برابطها المباشر)
-    let defaultProducts = [
+    // سعر الصرف المعتمد للمنتجات (يمكنك تعديل القيمة هنا عند الحاجة)
+    const EXCHANGE_RATE = 15000;
+
+    // قائمة المنتجات المعروضة
+    let products = [
       { 
         id: 1, 
         name: "حساب شاقة / لعبة", 
@@ -347,12 +220,6 @@
       }
     ];
 
-    let products = JSON.parse(localStorage.getItem('my_products')) || defaultProducts;
-
-    function getRate() {
-      return parseFloat(document.getElementById('exchangeRate').value) || 1;
-    }
-
     function formatNumber(num) {
       return new Intl.NumberFormat('ar-SY').format(Math.round(num));
     }
@@ -360,7 +227,6 @@
     function renderProducts(list = products) {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
-      const rate = getRate();
 
       if (list.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">لا توجد منتجات للعرض.</p>';
@@ -368,7 +234,7 @@
       }
 
       list.forEach(p => {
-        const priceSYP = p.priceUSD * rate;
+        const priceSYP = p.priceUSD * EXCHANGE_RATE;
         const msg = encodeURIComponent(`السلام عليكم، استفسار عن توفر المنتج:\n- الاسم: ${p.name}\n- السعر: ${formatNumber(priceSYP)} ل.س (${p.priceUSD}$)`);
         const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
@@ -395,10 +261,6 @@
       });
 
       updateCategories();
-    }
-
-    function updatePrices() {
-      filterProducts();
     }
 
     function filterProducts() {
@@ -429,36 +291,6 @@
           select.appendChild(opt);
         }
       });
-    }
-
-    function openAdminModal() {
-      document.getElementById('adminModal').style.display = 'flex';
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-      document.getElementById('productForm').reset();
-    }
-
-    function saveProduct(e) {
-      e.preventDefault();
-      const name = document.getElementById('prodName').value;
-      const priceUSD = parseFloat(document.getElementById('prodPriceUSD').value);
-      const category = document.getElementById('prodCategory').value;
-      const image = document.getElementById('prodImage').value;
-
-      const newProd = {
-        id: Date.now(),
-        name,
-        priceUSD,
-        category,
-        image
-      };
-
-      products.push(newProd);
-      localStorage.setItem('my_products', JSON.stringify(products));
-      renderProducts();
-      closeAdminModal();
     }
 
     // التشغيل الأولي
